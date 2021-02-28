@@ -1,5 +1,6 @@
 import request from 'supertest';
 import {app} from "../app";
+import {getConnection} from 'typeorm';
 
 import createConnection from "../database";
 
@@ -12,6 +13,15 @@ describe("Users" , () => {
 
 
     });
+
+    afterAll( async () => {
+        const connection = getConnection();
+
+        await connection.dropDatabase();
+        await connection.close();
+        
+    });
+
     it("Should be able to create a new user",async ()=> { 
         const response = await request(app).post("/users").send({
             email : "user@exemple.com",
